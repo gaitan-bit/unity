@@ -1,0 +1,124 @@
+2D横版跳跃移动
+
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float moveSpeed = 5f;
+    public float jumpForce = 5f;
+    private bool isJumping = false;
+    private bool isGrounded = false;
+    private Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void Update()
+    {
+        // 横向移动
+        float moveX = Input.GetAxis("Horizontal");
+        rb.velocity = new Vector2(moveX * moveSpeed, rb.velocity.y);
+
+        // 跳跃
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            isJumping = true;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 判断是否在地面上
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+            isJumping = false;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        // 判断是否离开地面
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;        
+        }
+    }
+}
+
+
+
+
+平面人物移动
+
+
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public float speed = 5f; // 人物移动速度
+
+    private Rigidbody2D rb; // 刚体组件
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>(); // 获取刚体组件的引用
+    }
+
+    private void Update()
+    {
+        // 获取水平和垂直输入
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+
+        // 计算移动方向，并设置刚体速度
+        Vector2 movement = new Vector2(moveHorizontal, moveVertical);
+        rb.velocity = movement * speed;
+    }
+}
+
+
+2.
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class playscript : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        GetInput();
+    }
+
+    public void GetInput()
+    {
+        if(Input.GetKey(KeyCode.W))
+        {
+            this.gameObject.transform.Translate(Vector3.up*Time.deltaTime);
+        }
+        if(Input.GetKey(KeyCode.S))
+        {
+            this.gameObject.transform.Translate(Vector3.down*Time.deltaTime);
+        }
+        if(Input.GetKey(KeyCode.A))
+        {
+            this.gameObject.transform.Translate(Vector3.left*Time.deltaTime);
+        }
+        if(Input.GetKey(KeyCode.D))
+        {
+            this.gameObject.transform.Translate(Vector3.right*Time.deltaTime);
+        }
+    }
+}
